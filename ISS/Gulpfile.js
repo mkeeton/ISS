@@ -6,7 +6,7 @@ var exec = require('child_process').exec;
 
 gulp.task('vet', function () {
     log('Analysing code with TSLint....');
-    return gulp.src(config.tsSource)
+    return gulp.src(config.authtsSource)
     .pipe($.tslint({
         configuration: "tslint.json",
         formatter: "verbose",
@@ -15,49 +15,90 @@ gulp.task('vet', function () {
     .pipe($.tslint.report())
 });
 
-gulp.task('clean-styles', function () {
-    log('Cleaning CSS....');
-    var files = config.appCssSource;
+gulp.task('clean-defaultstyles', function () {
+    log('Cleaning Default CSS....');
+    var files = config.defaultappCssSource;
     return clean(files);
 });
 
-gulp.task('sass', ['clean-styles'], function () {
+gulp.task('clean-authstyles', function () {
+    log('Cleaning Auth CSS....');
+    var files = config.authappCssSource;
+    return clean(files);
+});
+
+gulp.task('defaultsass', ['clean-defaultstyles'], function () {
     log('Compiling SASS....');
-    return gulp.src(config.appSassSource)
+    return gulp.src(config.defaultappSassSource)
     .pipe($.plumber())
     .pipe($.sass())
     .pipe($.autoprefixer({browsers: ['last 2 version', '> 5%']}))
-    .pipe(gulp.dest(config.appSassDest));
+    .pipe(gulp.dest(config.defaultappSassDest));
 });
 
-gulp.task('clean-aot', function () {
+gulp.task('authsass', ['clean-authstyles'], function () {
+    log('Compiling SASS....');
+    return gulp.src(config.authappSassSource)
+    .pipe($.plumber())
+    .pipe($.sass())
+    .pipe($.autoprefixer({ browsers: ['last 2 version', '> 5%'] }))
+    .pipe(gulp.dest(config.authappSassDest));
+});
+
+gulp.task('clean-defaultaot', function () {
     log('Cleaning AOT Compilation....');
     var files = config.aotDestination;
     return clean(files);
 });
 
-gulp.task('aot', ['sass', 'clean-aot'], function (done) {
-    log('Performing AOT Compilation....');
-    exec('node_modules\\.bin\\ngc -p "tsconfig-aot.json"', function (err, stdout, stderr) {
+gulp.task('clean-authaot', function () {
+    log('Cleaning AOT Compilation....');
+    var files = config.aotDestination;
+    return clean(files);
+});
+
+gulp.task('defaultaot', ['sass', 'clean-defaultaot'], function (done) {
+    log('Performing Default AOT Compilation....');
+    exec('node_modules\\.bin\\ngc -p "tsconfig-defaultaot.json"', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         done(err);
     });
 });
 
-gulp.task('clean-build', function () {
-    log('Cleaning Distribution Package....');
+gulp.task('authaot', ['sass', 'clean-authaot'], function (done) {
+    log('Performing Auth AOT Compilation....');
+    exec('node_modules\\.bin\\ngc -p "tsconfig-authaot.json"', function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        done(err);
+    });
+});
+
+gulp.task('clean-defaultbuild', function () {
+    log('Cleaning Default Distribution Package....');
     var files = config.rollupDestination;
     return clean(files);
 });
 
-gulp.task('build', ['aot', 'clean-build'], function (done) {
-    log('Creating Distribution Package....');
-    exec('node_modules\\.bin\\rollup -c "rollup-config.js"', function (err, stdout, stderr) {
+gulp.task('clean-authbuild', function () {
+    log('Cleaning Auth Distribution Package....');
+    var files = config.rollupDestination;
+    return clean(files);
+});
+
+gulp.task('buildauth', ['authaot', 'clean-authbuild'], function (done) {
+    log('Creating Auth Distribution Package....');
+    exec('node_modules\\.bin\\rollup -c "rollup-config-auth.js"', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         done(err);
     });
+});
+
+gulp.task('build', ['buildauth'], function (done) {
+    log('Build Complete....');
+    done();
 });
 
 function clean(path) {

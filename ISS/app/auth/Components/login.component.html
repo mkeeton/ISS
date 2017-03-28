@@ -1,8 +1,8 @@
 ﻿<section id="LoginForm" class="login-form-wrap">
-    <h1><i class="fa fa-user-circle-o" aria-hidden="true"></i> HIGHFIELD LOGIN</h1>
+    <h1><i class="fa fa-user-circle-o" aria-hidden="true"></i>LOGIN</h1>
     <div *ngIf="displayRegister==='true'">
-        <input type="radio" name="options" (click)="formOptions.state = 0" [checked]="0 === formOptions.state" id="Existing" value="Existing" /><label for="Existing">I am an existing customer</label><br />
-        <input type="radio" name="options" (click)="formOptions.state = 1" [checked]="1 === formOptions.state" id="New" value="New" /><label for="New">I am a new customer</label>
+        <input type="radio" name="options" (click)="formOptions.state = 0" [checked]="0 === formOptions.state" id="Existing" value="Existing" /><label for="Existing">I am an existing user</label><br />
+        <input type="radio" name="options" (click)="formOptions.state = 1" [checked]="1 === formOptions.state" id="New" value="New" /><label for="New">I am a new user</label>
     </div>
     <h2 *ngIf="formOptions.state === 0">EXISTING CUSTOMERS</h2>
     <form *ngIf="formOptions.state === 0" class="login-form" [formGroup]="myForm" (ngSubmit)="onSubmit(myForm.value)">
@@ -19,7 +19,7 @@
             </label>
         </div>
         <div class="forgotten-link">
-            <a [routerLink]="['/ForgottenPassword']">Forgotten your password?</a>
+            <a [routerLink]="['/Auth/ForgottenPassword']">Forgotten your password?</a>
         </div>
         <div>
             <input type="submit" value="Sign In" [disabled]="!myForm.valid">

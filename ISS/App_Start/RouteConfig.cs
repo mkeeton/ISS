@@ -14,6 +14,12 @@ namespace ISS
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "Authentication",
+                url: "Auth/{*url}",
+                defaults: new { controller = "Authentication", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{*url}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

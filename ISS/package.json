@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "rm -f ./*.js; rm -f ./*.js.map",
     "lint": "./node_modules/.bin/tslint -c tslint.json app/**/*.ts --force",
-    "tsc": "./node_modules/.bin/ngc -p tsconfig-aot.json",
+    "tsc": "./node_modules/.bin/ngc -p tsconfig-authaot.json",
     "rollup": "./node_modules/.bin/rollup -c rollup-config.js",
     "tsc:w": "./node_modules/.bin/tsc -w",
     "postinstall": "typings install",

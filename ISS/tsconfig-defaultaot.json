@@ -13,8 +13,8 @@
   },
 
   "files": [
-    "app/app.module.ts",
-    "app/main.ts"
+    "app/default/app.module.ts",
+    "app/default/main.ts"
   ],
 
   "angularCompilerOptions": {

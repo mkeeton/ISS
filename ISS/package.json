@@ -1,0 +1,53 @@
+{
+  "name": "ISS",
+  "version": "0.0.1",
+  "scripts": {
+    "clean": "rm -f ./*.js; rm -f ./*.js.map",
+    "lint": "./node_modules/.bin/tslint -c tslint.json app/**/*.ts --force",
+    "tsc": "./node_modules/.bin/ngc -p tsconfig-aot.json",
+    "rollup": "./node_modules/.bin/rollup -c rollup-config.js",
+    "tsc:w": "./node_modules/.bin/tsc -w",
+    "postinstall": "typings install",
+    "typings": "typings"
+  },
+  "dependencies": {
+    "@angular/common": "~2.4.0",
+    "@angular/compiler": "~2.4.0",
+    "@angular/compiler-cli": "^2.4.1",
+    "@angular/core": "~2.4.0",
+    "@angular/forms": "~2.4.0",
+    "@angular/http": "~2.4.0",
+    "@angular/platform-browser": "~2.4.0",
+    "@angular/platform-browser-dynamic": "~2.4.0",
+    "@angular/router": "~3.4.0",
+    "@angular/platform-server": "^2.4.0",
+    "@angular/upgrade": "~2.4.0",
+    "angular-in-memory-web-api": "~0.1.13",
+    "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.8",
+    "rxjs": "5.0.1",
+    "systemjs": "0.19.40",
+    "zone.js": "^0.7.4"
+  },
+  "devDependencies": {
+    "@types/core-js": "^0.9.34",
+    "@types/jasmine": "^2.5.36",
+    "@types/node": "^6.0.46",
+    "@types/selenium-webdriver": "^2.53.33",
+    "concurrently": "^3.1.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-load-plugins": "^1.4.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sass": "^2.3.2",
+    "gulp-tslint": "^7.0.0",
+    "gulp-util": "^3.0.7",
+    "rollup": "^0.36.3",
+    "rollup-plugin-commonjs": "^5.0.5",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-uglify": "^1.0.1",
+    "tslint": "^4.0.1",
+    "typescript": "^2.0.3"
+  }
+}

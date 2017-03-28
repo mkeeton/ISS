@@ -1,0 +1,90 @@
+﻿body {
+  font-family: 'Lato', sans-serif;
+}
+
+.login-form-wrap {
+  padding: 10px 10px 10px 10px;
+  background-color:white;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.login-form-wrap > h1 {
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+}
+
+.login-form-wrap > h2 {
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+}
+
+.login-form > p.error-msg {
+    font-family: 'Lato', sans-serif;
+    color: red;
+}
+
+.login-form-wrap > div > label {
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+}
+
+.login-form > a {
+    font-family: 'Lato', sans-serif;
+}
+
+.login-form-wrap input {
+  font-weight: 400;
+  font-family: 'Lato', sans-serif;
+  cursor: text;
+  padding: 12px 20px;
+}
+
+.login-form-wrap input[type="radio"] {
+    margin: 5px 0 5px 0;
+}
+
+.login-form input[type="email"], .login-form input[type="password"], .login-form input[type="text"] {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px; 
+  color: #000000;
+  margin: 8px 0 8px 0;
+  border-radius: 4px 4px 4px 4px;
+  width: 250px;
+  padding-bottom: 20px;
+}
+
+.login-form input[type="submit"] {
+    background-color: #009FE3;
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    border: none;
+    outline: none;
+    padding: 15px 30px 15px 30px;
+    cursor: pointer;
+    border-radius: 6px 6px 6px 6px;
+}
+
+p.instruction-label {
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.forgotten-link {
+  width:295px;
+  text-align:right;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  padding-top: 15px;
+  padding-bottom: 20px;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+}
+
+h2 {
+  font-family: 'Lato', sans-serif;
+}

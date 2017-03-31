@@ -45,19 +45,13 @@ gulp.task('authsass', ['clean-authstyles'], function () {
     .pipe(gulp.dest(config.authappSassDest));
 });
 
-gulp.task('clean-defaultaot', function () {
+gulp.task('clean-aot', function () {
     log('Cleaning AOT Compilation....');
     var files = config.aotDestination;
     return clean(files);
 });
 
-gulp.task('clean-authaot', function () {
-    log('Cleaning AOT Compilation....');
-    var files = config.aotDestination;
-    return clean(files);
-});
-
-gulp.task('defaultaot', ['sass', 'clean-defaultaot'], function (done) {
+gulp.task('defaultaot', ['defaultsass'], function (done) {
     log('Performing Default AOT Compilation....');
     exec('node_modules\\.bin\\ngc -p "tsconfig-defaultaot.json"', function (err, stdout, stderr) {
         console.log(stdout);
@@ -66,7 +60,7 @@ gulp.task('defaultaot', ['sass', 'clean-defaultaot'], function (done) {
     });
 });
 
-gulp.task('authaot', ['sass', 'clean-authaot'], function (done) {
+gulp.task('authaot', ['authsass'], function (done) {
     log('Performing Auth AOT Compilation....');
     exec('node_modules\\.bin\\ngc -p "tsconfig-authaot.json"', function (err, stdout, stderr) {
         console.log(stdout);
@@ -75,19 +69,22 @@ gulp.task('authaot', ['sass', 'clean-authaot'], function (done) {
     });
 });
 
-gulp.task('clean-defaultbuild', function () {
+gulp.task('clean-build', function () {
     log('Cleaning Default Distribution Package....');
     var files = config.rollupDestination;
     return clean(files);
 });
 
-gulp.task('clean-authbuild', function () {
-    log('Cleaning Auth Distribution Package....');
-    var files = config.rollupDestination;
-    return clean(files);
+gulp.task('builddefault', ['defaultaot'], function (done) {
+    log('Creating Default Distribution Package....');
+    exec('node_modules\\.bin\\rollup -c "rollup-config-default.js"', function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        done(err);
+    });
 });
 
-gulp.task('buildauth', ['authaot', 'clean-authbuild'], function (done) {
+gulp.task('buildauth', ['authaot'], function (done) {
     log('Creating Auth Distribution Package....');
     exec('node_modules\\.bin\\rollup -c "rollup-config-auth.js"', function (err, stdout, stderr) {
         console.log(stdout);
@@ -96,8 +93,9 @@ gulp.task('buildauth', ['authaot', 'clean-authbuild'], function (done) {
     });
 });
 
-gulp.task('build', ['buildauth'], function (done) {
-    log('Build Complete....');
+gulp.task('build', ['clean-aot','clean-build'], function (done) {
+    gulp.start('builddefault');
+    gulp.start('buildauth');
     done();
 });
 

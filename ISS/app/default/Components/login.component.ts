@@ -17,7 +17,7 @@ import "rxjs/add/operator/switchMap";
     templateUrl: "login.component.html",
 })
 
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginPageComponent implements OnInit, OnDestroy {
 
     public formOptions = { state: 0 };
     public userList: User[];

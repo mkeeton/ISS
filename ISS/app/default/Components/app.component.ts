@@ -2,7 +2,7 @@
 
 import { AuthComponent } from "./auth.component";
 import { ForgottenPasswordComponent } from "./forgottenPassword.component";
-import { LoginComponent } from "./login.component";
+import { LoginPageComponent } from "./login.component";
 import { ResetPasswordComponent } from "./resetPassword.component";
 
 import { APIService } from "../Services/api.service";

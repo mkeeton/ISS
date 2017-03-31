@@ -1,9 +1,9 @@
 ﻿module.exports = function () {
     var config = {
-        defaulttsSource: "app/auth/**/*.ts",
-        defaultappSassSource: "app/auth/Styles/*.scss",
-        defaultappSassDest: "app/auth/Styles",
-        defaultappCssSource: "app/auth/Styles/*.css",
+        defaulttsSource: "app/default/**/*.ts",
+        defaultappSassSource: "app/default/Styles/*.scss",
+        defaultappSassDest: "app/default/Styles",
+        defaultappCssSource: "app/default/Styles/*.css",
         authtsSource: "app/auth/**/*.ts",
         authappSassSource: "app/auth/Styles/*.scss",
         authappSassDest: "app/auth/Styles",

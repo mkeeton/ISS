@@ -30,7 +30,7 @@ export class EasyXDMService {
         //    };
         // }
         // else {
-        return new easyXDM.noConflict(namespace);
+        return new easyXDM(namespace);
         // }
 
         // return easyXDM.noConflict(_namespace);

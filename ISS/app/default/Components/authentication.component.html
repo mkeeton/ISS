@@ -1,0 +1,17 @@
+﻿<div id="authenticationStatus">
+    <div id="loggedIn" *ngIf="currentuser!=null">
+        <h4>Welcome {{currentuser.FirstName}} {{currentuser.LastName}}</h4><br />Not {{currentuser.FirstName}} {{currentuser.LastName}}? Please <a class="AuthLink" (click)="logoutClick()">Logout</a>.
+    </div>
+    <div id="loggedOut" *ngIf="currentuser==null">
+        You are currently not logged in:
+        <a class="AuthLink" (click)="loginClick()">Login</a>
+        <a class="AuthLink" (click)="RegisterClick()">Register</a>
+    </div>
+</div>
+<div id="openModal" class="modalDialog" [class.modalDialogVisible]="isLoginVisible">
+    <div>
+        <a title="Close" class="close" (click)="closeLoginClick()">X</a>
+        <div id="authenticationLogin"></div>
+    </div>
+</div>
+<router-outlet></router-outlet>

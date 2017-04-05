@@ -270,11 +270,8 @@
     <Content Include="app\auth\Components\passwordStrength.component.html" />
     <Content Include="app\auth\Components\resetPassword.component.html" />
     <Content Include="app\default\Components\app.component.html" />
-    <Content Include="app\default\Components\auth.component.html" />
-    <Content Include="app\default\Components\forgottenPassword.component.html" />
-    <Content Include="app\default\Components\login.component.html" />
-    <Content Include="app\default\Components\passwordStrength.component.html" />
-    <Content Include="app\default\Components\resetPassword.component.html" />
+    <Content Include="app\default\Components\authentication.component.html" />
+    <Content Include="app\default\Components\default.component.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -319,11 +316,9 @@
     <Content Include="bower.json" />
     <Content Include="package.json" />
     <Content Include="app\default\Styles\app.component.scss" />
-    <Content Include="app\default\Styles\forgottenPassword.component.scss" />
-    <Content Include="app\default\Styles\login.component.scss" />
     <Content Include="app\default\Styles\normalize.scss" />
-    <Content Include="app\default\Styles\passwordStrength.component.scss" />
-    <Content Include="app\default\Styles\resetPassword.component.scss" />
+    <Content Include="app\default\Styles\default.component.scss" />
+    <Content Include="app\default\Styles\authentication.component.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -359,6 +354,7 @@
     <Content Include="tsconfig-defaultaot.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app\default\Services\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
@@ -401,6 +397,7 @@
     <TypeScriptCompile Include="app\auth\Components\resetPassword.component.ts" />
     <TypeScriptCompile Include="app\auth\main.ts" />
     <TypeScriptCompile Include="app\auth\Modules\app-routing.module.ts" />
+    <TypeScriptCompile Include="app\auth\Modules\urlserializer.module.ts" />
     <TypeScriptCompile Include="app\auth\Services\api.service.ts" />
     <TypeScriptCompile Include="app\auth\Services\authenticated.service.ts" />
     <TypeScriptCompile Include="app\auth\Services\authentication.service.ts" />
@@ -410,19 +407,11 @@
     <TypeScriptCompile Include="app\default\app.module.ts" />
     <TypeScriptCompile Include="app\default\Classes\Users\user.ts" />
     <TypeScriptCompile Include="app\default\Components\app.component.ts" />
-    <TypeScriptCompile Include="app\default\Components\auth.component.ts" />
-    <TypeScriptCompile Include="app\default\Components\forgottenPassword.component.ts" />
-    <TypeScriptCompile Include="app\default\Components\login.component.ts" />
-    <TypeScriptCompile Include="app\default\Components\passwordStrength.component.ts" />
-    <TypeScriptCompile Include="app\default\Components\resetPassword.component.ts" />
+    <TypeScriptCompile Include="app\default\Components\authentication.component.ts" />
+    <TypeScriptCompile Include="app\default\Components\default.component.ts" />
     <TypeScriptCompile Include="app\default\main.ts" />
     <TypeScriptCompile Include="app\default\Modules\app-routing.module.ts" />
-    <TypeScriptCompile Include="app\default\Services\api.service.ts" />
-    <TypeScriptCompile Include="app\default\Services\authenticated.service.ts" />
-    <TypeScriptCompile Include="app\default\Services\authentication.service.ts" />
-    <TypeScriptCompile Include="app\default\Services\easyXDM.service.ts" />
-    <TypeScriptCompile Include="app\default\Services\storedSettings.service.ts" />
-    <TypeScriptCompile Include="app\default\Services\user.service.ts" />
+    <TypeScriptCompile Include="app\default\Modules\urlserializer.module.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

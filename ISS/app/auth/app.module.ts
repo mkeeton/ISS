@@ -2,6 +2,7 @@
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Http, HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
+import { UrlSerializer } from '@angular/router';
 import { AppComponent } from "./Components/app.component";
 import { AuthComponent } from "./Components/auth.component";
 import { ForgottenPasswordComponent } from "./Components/forgottenPassword.component";
@@ -9,6 +10,7 @@ import { LoginComponent } from "./Components/login.component";
 import { PasswordStrengthBar } from "./Components/passwordStrength.component";
 import { ResetPasswordComponent } from "./Components/resetPassword.component";
 import { AppRoutingModule } from "./Modules/app-routing.module";
+import { LowerCaseUrlSerializer } from "./Modules/urlserializer.module";
 
 @NgModule({
     bootstrap: [AppComponent],
@@ -23,6 +25,11 @@ import { AppRoutingModule } from "./Modules/app-routing.module";
             provide: "UserApiBaseUrl",
             useValue: "http://integratedsoftwaresolutions.co.uk",
         },
+        {
+            provide: UrlSerializer,
+            useClass: LowerCaseUrlSerializer,
+        },
+
     ],
 })
 

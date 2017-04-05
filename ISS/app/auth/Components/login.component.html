@@ -4,7 +4,6 @@
         <input type="radio" name="options" (click)="formOptions.state = 0" [checked]="0 === formOptions.state" id="Existing" value="Existing" /><label for="Existing">I am an existing user</label><br />
         <input type="radio" name="options" (click)="formOptions.state = 1" [checked]="1 === formOptions.state" id="New" value="New" /><label for="New">I am a new user</label>
     </div>
-    <h2 *ngIf="formOptions.state === 0">EXISTING CUSTOMERS</h2>
     <form *ngIf="formOptions.state === 0" class="login-form" [formGroup]="myForm" (ngSubmit)="onSubmit(myForm.value)">
         <p class="instruction-label">Please sign in below using your account details</p>
         <p class="error-msg">{{loginError}}</p>
@@ -19,14 +18,13 @@
             </label>
         </div>
         <div class="forgotten-link">
-            <a [routerLink]="['/Auth/ForgottenPassword']">Forgotten your password?</a>
+            <a [routerLink]="['/auth/forgottenpassword']">Forgotten your password?</a>
         </div>
         <div>
             <input type="submit" value="Sign In" [disabled]="!myForm.valid">
         </div>
     </form>
 
-    <h2 *ngIf="formOptions.state === 1">NEW CUSTOMERS</h2>
     <form *ngIf="formOptions.state === 1" class="login-form" [formGroup]="registrationForm" (ngSubmit)="onRegister(registrationForm.value)">
         <p class="error-msg">{{registrationError}}</p>
         <div class="field" [class.error]="!registrationForm.get('forename').valid && registrationForm.get('forename').touched">

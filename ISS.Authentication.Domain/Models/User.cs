@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 
 namespace ISS.Authentication.Domain.Models
 {
-    public class User
+    public class User : IUser<Guid>
     {
         public Guid Id { get; set; }
 
@@ -14,7 +11,7 @@ namespace ISS.Authentication.Domain.Models
 
         public string SecurityStamp { get; set; }
 
-        public string Email { get; set; }
+        public string Email { get; set; } 
 
         public bool EmailConfirmed { get; set; }
 
@@ -27,6 +24,18 @@ namespace ISS.Authentication.Domain.Models
         public bool Locked { get; set; }
 
         public DateTime? LockedUntil { get; set; }
+
+        public string UserName
+        {
+            get
+            {
+                return Email;
+            }
+            set
+            {
+                Email = value;
+            }
+        }
 
         public class SearchParameters
         {

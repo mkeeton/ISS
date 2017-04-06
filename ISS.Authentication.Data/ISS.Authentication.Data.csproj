@@ -30,6 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,13 +48,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbContext\OleDapperDbContext.cs" />
+    <Compile Include="DbContext\SqlDapperDbContext.cs" />
+    <Compile Include="Interfaces\DbContext\IDbContext.cs" />
+    <Compile Include="Interfaces\Repositories\IClaimRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IClientRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IPasswordResetTokenRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IRefreshTokenRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IRoleRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IUserRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IUserSessionRepository.cs" />
+    <Compile Include="Interfaces\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ClaimRepository.cs" />
+    <Compile Include="Repositories\ClientRepository.cs" />
+    <Compile Include="Repositories\PasswordResetTokenRepository.cs" />
+    <Compile Include="Repositories\RefreshTokenRepository.cs" />
+    <Compile Include="Repositories\RoleRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="UnitOfWork\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ISS.Authentication.Domain\ISS.Authentication.Domain.csproj">
       <Project>{815a71b3-448a-4b9b-a2e0-291d45f8971e}</Project>
       <Name>ISS.Authentication.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -19,11 +19,11 @@ import { LowerCaseUrlSerializer } from "./Modules/urlserializer.module";
     providers: [
         {
             provide: "AuthApiBaseUrl",
-            useValue: "http://integratedsoftwaresolutions.co.uk",
+            useValue: "http://localhost:53303",
         },
         {
             provide: "UserApiBaseUrl",
-            useValue: "http://integratedsoftwaresolutions.co.uk",
+            useValue: "http://localhost:53303",
         },
         {
             provide: UrlSerializer,

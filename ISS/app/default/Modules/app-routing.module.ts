@@ -4,8 +4,8 @@ import { RouterModule, Routes } from "@angular/router";
 import { DefaultComponent } from "../Components/default.component";
 
 const routes: Routes = [
-    { path: "default/:id", component: DefaultComponent },
-    { path: ":id", redirectTo: "/default/:id", pathMatch: "full" },
+    { path: "default", component: DefaultComponent },
+    { path: "", redirectTo: "default", pathMatch: "full" },
 ];
 
 @NgModule({

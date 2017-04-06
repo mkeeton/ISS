@@ -1,7 +1,9 @@
 ﻿import { Component, Inject, OnInit } from "@angular/core";
 import { AuthenticationService } from "../Services/authentication.service";
+import { EasyXDMService } from "../Services/easyXDM.service";
 import { StoredSettingService } from "../Services/storedSettings.service";
-declare var easyXDM: any;
+
+import "rxjs/add/operator/switchMap";
 
 @Component({
     selector: "auth",
@@ -11,11 +13,13 @@ declare var easyXDM: any;
 export class AuthComponent implements OnInit {
 
     constructor(private authService: AuthenticationService,
+        private easyXDMService: EasyXDMService,
         private settingService: StoredSettingService) {
     }
 
     public ngOnInit() {
-        let socket = new easyXDM.Socket({
+        let easyXDMAuth = this.easyXDMService.xdmInstance("Authentication");
+        let socket = new easyXDMAuth.Socket({
             onMessage: (message, origin) => {
                 if (message === "Logout") {
                     this.authService.logoutAsync()
@@ -26,12 +30,6 @@ export class AuthComponent implements OnInit {
                             socket.postMessage("");
                         });
                 } else {
-                    if (message.indexOf("RemoteLogin:") > -1) {
-                        this.authService.remoteLoginAsync(message.replace("RemoteLogin:", ""))
-                            .subscribe((res: boolean) => {
-                                socket.postMessage(res);
-                            });
-                    } else {
                         this.authService.authenticateAsync(message)
                             .subscribe((res: string) => {
                                 socket.postMessage(res);
@@ -39,7 +37,6 @@ export class AuthComponent implements OnInit {
                             (err) => {
                                 socket.postMessage("");
                             });
-                    }
                 }
             },
         });

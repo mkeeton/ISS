@@ -14,7 +14,7 @@ namespace ISS.Authentication.Domain.Models
 
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
+        public string ClientName { get; set; }
 
         public string ClientId { get; set; }
 

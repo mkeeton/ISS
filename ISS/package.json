@@ -23,7 +23,7 @@
     "@angular/router": "~3.4.0",
     "@angular/upgrade": "~2.4.0",
     "angular-in-memory-web-api": "~0.1.13",
-    "angular-iss-authentication": "0.0.6",
+    "angular-iss-authentication": "0.0.8",
     "core-js": "^2.4.1",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.1",

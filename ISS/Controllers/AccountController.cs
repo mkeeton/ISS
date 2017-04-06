@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Claims;
@@ -6,16 +7,18 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using ISS.Models;
 using ISS.Providers;
 using ISS.Results;
+using ISS.Authentication.Domain.Models;
+
+using ISS.Authentication.Infrastructure.Factories;
+
+using ISS.Framework;
 
 namespace ISS.Controllers
 {
@@ -24,29 +27,57 @@ namespace ISS.Controllers
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
-        private ApplicationUserManager _userManager;
 
-        public AccountController()
-        {
-        }
+        private UserFactory _userFactory;
 
-        public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
-        {
-            UserManager = userManager;
-            AccessTokenFormat = accessTokenFormat;
-        }
-
-        public ApplicationUserManager UserManager
+        protected UserFactory UserFactory
         {
             get
             {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userFactory;
             }
-            private set
+            set
+            {
+                _userFactory = value;
+            }
+        }
+
+        private Managers.ApplicationUserManager _userManager;
+
+        protected Managers.ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager;
+            }
+            set
             {
                 _userManager = value;
             }
+        }
+
+        //private IEmailService _emailService;
+
+        //protected IEmailService EmailService
+        //{
+        //    get
+        //    {
+        //        return _emailService;
+        //    }
+        //    set
+        //    {
+        //        _emailService = value;
+        //    }
+        //}
+
+        public ISS.Authentication.Data.UnitOfWork.UnitOfWork UnitOfWork { get; set; }
+
+        public AccountController(UserFactory userFactory, Managers.ApplicationUserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)//, IEmailService emailService)
+        {
+            _userFactory = userFactory;
+            UserManager = userManager;
+            AccessTokenFormat = accessTokenFormat;
+           // _emailService = emailService;
         }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
@@ -68,8 +99,18 @@ namespace ISS.Controllers
 
         // POST api/Account/Logout
         [Route("Logout")]
+        [HttpGet]
+        [HttpPost]
         public IHttpActionResult Logout()
         {
+            ClaimsIdentity userIdent = User.Identity as ClaimsIdentity;
+            foreach (Claim cl in userIdent.Claims)
+            {
+                if (cl.Type == "authSessionId")
+                {
+                    break;
+                }
+            }
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
@@ -78,7 +119,7 @@ namespace ISS.Controllers
         [Route("ManageInfo")]
         public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
         {
-            IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            ISS.Authentication.Public.Domain.ViewModels.User user = await _userFactory.Build(new Guid(User.Identity.GetUserId()));
 
             if (user == null)
             {
@@ -87,7 +128,7 @@ namespace ISS.Controllers
 
             List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
 
-            foreach (IdentityUserLogin linkedAccount in user.Logins)
+            foreach (ISS.Authentication.Public.Domain.ViewModels.Login linkedAccount in user.Logins)
             {
                 logins.Add(new UserLoginInfoViewModel
                 {
@@ -96,7 +137,7 @@ namespace ISS.Controllers
                 });
             }
 
-            if (user.PasswordHash != null)
+            if (user.HasPassword == true)
             {
                 logins.Add(new UserLoginInfoViewModel
                 {
@@ -123,9 +164,9 @@ namespace ISS.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
+            IdentityResult result = await UserManager.ChangePasswordAsync(new Guid(User.Identity.GetUserId()), model.OldPassword,
                 model.NewPassword);
-            
+
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
@@ -143,7 +184,7 @@ namespace ISS.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+            IdentityResult result = await UserManager.AddPasswordAsync(new Guid(User.Identity.GetUserId()), model.NewPassword);
 
             if (!result.Succeeded)
             {
@@ -151,6 +192,124 @@ namespace ISS.Controllers
             }
 
             return Ok();
+        }
+
+        // POST api/Account/PasswordReminder
+        [Route("PasswordReminder")]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IHttpActionResult> PasswordReminder(ForgottenPasswordBindingModel model)
+        {
+
+            ISS.Authentication.Domain.Models.User _user = await UnitOfWork.UserStore.FindByEmailAsync(model.Email);
+            List<ISS.Authentication.Domain.Models.User> _users = await UnitOfWork.UserStore.ListAsync();
+            if (_user == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                //ISS.Authentication.Domain.Models.EmailTemplate _template = await UnitOfWork.EmailTemplateStore.FindByIdAsync(NullHandlers.NGUID(ConfigurationManager.AppSettings["passwordReminderTemplateId"]));
+                //if (_template == null)
+                //{
+                //    return InternalServerError();
+                //}
+
+                ISS.Authentication.Domain.Models.PasswordResetToken _token = await UnitOfWork.PasswordResetTokenStore.CreateAsync(_user.Id, 60);
+                if (_token == null)
+                {
+                    return InternalServerError();
+                }
+
+                //string _body = _template.Body.Replace("[[Token]]", _token.Token).Replace("[[User.FirstName]]", _user.FirstName);
+
+                //List<string> _to = new List<string>();
+                //_to.Add(model.Email);
+                //if (await EmailService.SendEmail(_template.Subject, _body, _template.From, _to, new List<string>(), new List<string>(), new List<string>()))
+                //{
+                    return Ok();
+                //}
+                //else
+                //{
+                //    return InternalServerError();
+                //}
+            }
+
+        }
+
+        // POST api/Account/ConfirmToken
+        [Route("ConfirmToken")]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IHttpActionResult> ConfirmToken([FromBody]string token)
+        {
+            PasswordResetToken _token = await UnitOfWork.PasswordResetTokenStore.FindByToken(token);
+            if (_token == null)
+            {
+                return BadRequest("Invalid Token");
+            }
+            if (_token.Expires < DateTime.Now)
+            {
+                return BadRequest("Expired Token");
+            }
+            if (_token.Used.HasValue)
+            {
+                return BadRequest("Token Already Used");
+            }
+            ISS.Authentication.Public.Domain.ViewModels.User _user = await UserFactory.Build(_token.UserId);
+            if (_user == null)
+            {
+                return BadRequest("User not Found");
+            }
+            return Ok(_user);
+        }
+
+        // POST api/Account/PasswordReset
+        [Route("PasswordReset")]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IHttpActionResult> PasswordReset(ResetPasswordBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            PasswordResetToken _token = await UnitOfWork.PasswordResetTokenStore.FindByToken(model.ResetToken);
+            if (_token == null)
+            {
+                return BadRequest("Invalid Token");
+            }
+            if (_token.Expires < DateTime.Now)
+            {
+                return BadRequest("Expired Token");
+            }
+            if (_token.Used.HasValue)
+            {
+                return BadRequest("Token Already Used");
+            }
+            ISS.Authentication.Domain.Models.User _user = await UnitOfWork.UserStore.FindByIdAsync(_token.UserId);
+            if (_user == null)
+            {
+                return BadRequest("User not Found");
+            }
+            IdentityResult _result = await UserManager.RemovePasswordAsync(_user.Id);
+            _result = await UserManager.AddPasswordAsync(_user.Id, model.NewPassword);
+            _token.Used = DateTime.Now;
+            if (_result.Succeeded)
+            {
+                await UnitOfWork.PasswordResetTokenStore.UpdateAsync(_token);
+                return Ok();
+            }
+            else
+            {
+                string _errors = "";
+                foreach (string _error in _result.Errors)
+                {
+                    if (_errors != "") { _errors += "; "; }
+                    _errors += _error;
+                }
+                return BadRequest(_errors);
+            }
         }
 
         // POST api/Account/AddExternalLogin
@@ -180,7 +339,7 @@ namespace ISS.Controllers
                 return BadRequest("The external login is already associated with an account.");
             }
 
-            IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
+            IdentityResult result = await UserManager.AddLoginAsync(new Guid(User.Identity.GetUserId()),
                 new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
 
             if (!result.Succeeded)
@@ -204,12 +363,12 @@ namespace ISS.Controllers
 
             if (model.LoginProvider == LocalLoginProvider)
             {
-                result = await UserManager.RemovePasswordAsync(User.Identity.GetUserId());
+                result = await UserManager.RemovePasswordAsync(new Guid(User.Identity.GetUserId()));
             }
             else
             {
-                result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(),
-                    new UserLoginInfo(model.LoginProvider, model.ProviderKey));
+                result = await UserManager.RemoveLoginAsync(new Guid(User.Identity.GetUserId()),
+                      new UserLoginInfo(model.LoginProvider, model.ProviderKey));
             }
 
             if (!result.Succeeded)
@@ -250,7 +409,7 @@ namespace ISS.Controllers
                 return new ChallengeResult(provider, this);
             }
 
-            ApplicationUser user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
+            ISS.Authentication.Domain.Models.User user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
                 externalLogin.ProviderKey));
 
             bool hasRegistered = user != null;
@@ -258,11 +417,11 @@ namespace ISS.Controllers
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
+
+                ClaimsIdentity oAuthIdentity = await UserManager.GenerateUserIdentityAsync(user,
                     OAuthDefaults.AuthenticationType);
-                ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    CookieAuthenticationDefaults.AuthenticationType);
+                ClaimsIdentity cookieIdentity = await UserManager.GenerateUserIdentityAsync(user,
+                   CookieAuthenticationDefaults.AuthenticationType);
 
                 AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user.UserName);
                 Authentication.SignIn(properties, oAuthIdentity, cookieIdentity);
@@ -328,7 +487,7 @@ namespace ISS.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ISS.Authentication.Domain.Models.User() { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -357,7 +516,7 @@ namespace ISS.Controllers
                 return InternalServerError();
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ISS.Authentication.Domain.Models.User() { UserName = model.Email, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user);
             if (!result.Succeeded)
@@ -368,17 +527,65 @@ namespace ISS.Controllers
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
             {
-                return GetErrorResult(result); 
+                return GetErrorResult(result);
             }
+            return Ok();
+        }
+
+        // GET api/Account/UserAccountSummary
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        [Route("UserAccountSummary")]
+        [HttpGet]
+        public async Task<IHttpActionResult> UserAccountSummary()
+        {
+            var user = await _userFactory.Build(new Guid(User.Identity.GetUserId()));
+            return Ok(user);
+        }
+
+        // POST api/Account/UpdateAccount
+        [Route("UpdateAccount")]
+        public async Task<IHttpActionResult> UpdateAccount(UpdateAccountBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            ISS.Authentication.Domain.Models.User user = await UserManager.FindByIdAsync(new Guid(User.Identity.GetUserId()));
+            if ((model.Email != user.Email) && (model.Password != null) && (model.Password.Trim() != ""))
+            {
+                if (await UserManager.CheckPasswordAsync(user, model.Password) == true)
+                {
+                    user.Email = model.Email;
+                    user.UserName = user.Email;
+                    user.EmailConfirmed = false;
+                }
+                else
+                {
+                    return BadRequest("The provided password was incorrect");
+                }
+            }
+            else
+            {
+                return BadRequest("You must provide your password in order to change your email address");
+            }
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            IdentityResult result = UserManager.Update(user);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
             return Ok();
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && _userManager != null)
+            if (disposing && _userFactory != null)
             {
-                _userManager.Dispose();
-                _userManager = null;
+                _userFactory.Dispose();
+                _userFactory = null;
             }
 
             base.Dispose(disposing);

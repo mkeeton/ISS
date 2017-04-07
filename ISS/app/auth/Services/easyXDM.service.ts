@@ -1,39 +1,35 @@
 ﻿import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
+import { XDMInstance } from "../Classes/xdmInstance";
 declare var easyXDM: any;
 
 @Injectable()
 export class EasyXDMService {
 
-    public xdmInstance(namespace: string): any {// , elementId: any): any {
+    private instances: Array<XDMInstance> = new Array<XDMInstance>();
 
-        // let element = document.getElementById(elementId)
-        // let easyXDMElement,
-        //    scripts = document.getElementsByTagName("script"),
-        //    scriptIdx;
-        // let isEasyXDMPresent = false;
-        // console.log(scripts);
-        // console.log("Looking for easyXDM");
-        // for (scriptIdx = 0; scriptIdx < scripts.length; scriptIdx = scriptIdx + 1) {
-        //    if (scripts[scriptIdx].src === "http://localhost:61621/scripts/easyXDM/easyXDM.debug.js") {
-        //        isEasyXDMPresent = true;
-        //        console.log("Found easyXDM");
-        //    }
-        // }
-        // if (isEasyXDMPresent === false || easyXDM === undefined) {
-        //    easyXDMElement = document.createElement("script");
-        //    easyXDMElement.type = "text/javascript";
-        //    easyXDMElement.src = "http://localhost:61621/scripts/easyXDM/easyXDM.debug.js";
-        //    element.parentNode.insertBefore(easyXDMElement, _element);
-        //    easyXDMElement.onload = function () {
-        //        return easyXDM.noConflict(namespace);
-        //    };
-        // }
-        // else {
-        return new easyXDM(namespace);
-        // }
+    public getXDMInstance(namespace: string): any {// , elementId: any): any {
 
-        // return easyXDM.noConflict(_namespace);
+        let found: boolean = false;
+        for (let i of this.instances) {
+            if (i.Namespace === namespace) {
+                found = true;
+                return i.Instance;
+            }
+        }
+        if (found === false) {
+            if (namespace === '') {
+                let newInstance: any = easyXDM;
+                this.instances.push(new XDMInstance(namespace, newInstance));
+                return newInstance;
+            }
+            else {
+                let newInstance: any = easyXDM.noConflict('easyXDM_' + namespace);
+                this.instances.push(new XDMInstance(namespace, newInstance));
+                return newInstance;
+            }
+        }
+
     }
 
     public Msg(xdmInstance: any, serverURL: string, msg: string): Observable<string[]> {

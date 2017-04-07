@@ -418,6 +418,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="app\auth\app.module.ts" />
     <TypeScriptCompile Include="app\auth\Classes\Users\user.ts" />
+    <TypeScriptCompile Include="app\auth\Classes\xdmInstance.ts" />
     <TypeScriptCompile Include="app\auth\Components\app.component.ts" />
     <TypeScriptCompile Include="app\auth\Components\auth.component.ts" />
     <TypeScriptCompile Include="app\auth\Components\forgottenPassword.component.ts" />

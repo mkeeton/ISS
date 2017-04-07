@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         try {
-            this.easyXDMAuth = this.easyXDMService.xdmInstance("Authentication");
+            this.easyXDMAuth = this.easyXDMService.getXDMInstance("Authentication");
             this.socket = new this.easyXDMAuth.Socket({});
         } catch (ex) {
 

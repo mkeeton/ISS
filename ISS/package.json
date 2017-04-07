@@ -23,12 +23,12 @@
     "@angular/router": "~3.4.0",
     "@angular/upgrade": "~2.4.0",
     "angular-in-memory-web-api": "~0.1.13",
-    "angular-iss-authentication": "0.0.8",
+    "angular-iss-authentication": "0.0.18",
     "core-js": "^2.4.1",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.1",
     "systemjs": "0.19.40",
-    "zone.js": "^0.7.4"
+    "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@types/core-js": "^0.9.34",

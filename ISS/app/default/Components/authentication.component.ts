@@ -3,6 +3,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { User, APIService, AuthenticationService, CurrentUserService, EasyXDMService, StoredSettingService, UserService } from "angular-iss-authentication";
 import { DefaultComponent } from "./default.component";
 
+import "rxjs/add/operator/switchMap";
+
 @Component({
     providers: [CurrentUserService],
     selector: "auth-component",
@@ -26,14 +28,9 @@ export class AuthenticationComponent implements OnInit {
     public ngOnInit() {
         this.currentUserService.dispatcher.subscribe((user) => {
             this.currentuser = user;
-            this.currentUserChanged();
         });
         this.isLoginVisible = false;
         this.getCurrentUser();
-    }
-
-    public currentUserChanged() {
-
     }
 
     public getCurrentUser() {

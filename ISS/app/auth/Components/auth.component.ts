@@ -2,6 +2,7 @@
 import { AuthenticationService } from "../Services/authentication.service";
 import { EasyXDMService } from "../Services/easyXDM.service";
 import { StoredSettingService } from "../Services/storedSettings.service";
+declare var easyXDM: any;
 
 import "rxjs/add/operator/switchMap";
 
@@ -18,7 +19,7 @@ export class AuthComponent implements OnInit {
     }
 
     public ngOnInit() {
-        let easyXDMAuth = this.easyXDMService.xdmInstance("Authentication");
+        let easyXDMAuth = this.easyXDMService.getXDMInstance("Authentication");
         let socket = new easyXDMAuth.Socket({
             onMessage: (message, origin) => {
                 if (message === "Logout") {

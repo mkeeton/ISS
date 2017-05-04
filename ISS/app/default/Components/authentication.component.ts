@@ -32,8 +32,6 @@ export class AuthenticationComponent implements OnInit {
         this.currentUserService.dispatcher.subscribe((user) => {
             this.currentuser = user;
             this.ref.detectChanges();
-            console.log('App');
-            console.log(this.currentuser);
             if (this.currentuser !== null) {
                 this.closeLoginClick();
             }

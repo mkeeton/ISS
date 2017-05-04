@@ -82,7 +82,7 @@ namespace ISS.Authentication.Data.Repositories
             {
                 user.Id = Guid.NewGuid();
                 using (IDbConnection connection = CurrentContext.OpenConnection())
-                    connection.Execute("insert into auth_Users(Id, PasswordHash, SecurityStamp, [Email], EmailConfirmed, FirstName, LastName, FailedLoginCount, Locked, LockedUntil) values(@Id, @PasswordHash, @SecurityStamp, @Email, @EmailConfirmed, @FirstName, @LastName, @FailedLoginCount, @Locked, @LockedUntil)", new { Id = user.Id, PasswordHash=user.PasswordHash, SecurityStamp=user.SecurityStamp, Email=user.Email, EmailConfirmed=user.EmailConfirmed, FirstName=user.FirstName, LastName=user.LastName, FailedLoginCount=user.FailedLoginCount, Locked=user.Locked, LockedUntil=(user.LockedUntil.HasValue ? user.LockedUntil.Value.ToString("dd-MM-yyyy HH:mm:ss") : "") });
+                    connection.Execute("insert into auth_Users(Id, PasswordHash, SecurityStamp, [Email], EmailConfirmed, FirstName, LastName, FailedLoginCount, Locked) values(@Id, @PasswordHash, @SecurityStamp, @Email, @EmailConfirmed, @FirstName, @LastName, @FailedLoginCount, @Locked)", new { Id = user.Id, PasswordHash=user.PasswordHash, SecurityStamp=user.SecurityStamp, Email=user.Email, EmailConfirmed=user.EmailConfirmed, FirstName=user.FirstName, LastName=user.LastName, FailedLoginCount=0, Locked=false });
             });
         }
 

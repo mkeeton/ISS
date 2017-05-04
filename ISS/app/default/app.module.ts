@@ -8,12 +8,13 @@ import { AppComponent } from "./Components/app.component";
 import { AuthenticationComponent } from "./Components/authentication.component";
 import { DefaultComponent } from "./Components/default.component";
 import { HeaderComponent } from "./Components/header.component";
+import { MenuComponent } from "./Components/menu.component";
 import { AppRoutingModule } from "./Modules/app-routing.module";
 import { LowerCaseUrlSerializer } from "./Modules/urlserializer.module";
 
 @NgModule({
     bootstrap: [AppComponent],
-    declarations: [AppComponent, AuthenticationComponent, DefaultComponent, HeaderComponent],
+    declarations: [AppComponent, AuthenticationComponent, DefaultComponent, HeaderComponent, MenuComponent],
     imports: [BrowserModule, AngularISSauthenticationModule.forRoot(), AppRoutingModule, FormsModule, HttpModule, ReactiveFormsModule],
     providers: [
         { provide: "AuthApiBaseUrl", useValue: "http://localhost:53303/Auth/auth" },

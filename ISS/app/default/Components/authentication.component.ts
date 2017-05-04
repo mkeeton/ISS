@@ -1,13 +1,13 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { User, APIService, AuthenticationService, CurrentUserService, EasyXDMService, StoredSettingService, UserService } from "angular-iss-authentication";
+import { User, APIService, AuthenticationService, CurrentUserService, EasyXDMService, LoginComponent, StoredSettingService, UserService } from "angular-iss-authentication";
 import { DefaultComponent } from "./default.component";
 
 import "rxjs/add/operator/switchMap";
 
 @Component({
-    providers: [CurrentUserService],
-    selector: "auth-component",
+    providers: [],
+    selector: ".auth-component",
     styleUrls: ["../Styles/authentication.component.css"],
     templateUrl: "./authentication.component.html",
 })
@@ -19,7 +19,10 @@ export class AuthenticationComponent implements OnInit {
     public isLoginVisible: boolean;
     public isLoginActive: boolean;
 
-    constructor(private currentUserService: CurrentUserService,
+    @ViewChild(LoginComponent) login: LoginComponent;
+
+    constructor(private ref: ChangeDetectorRef,
+        private currentUserService: CurrentUserService,
         private router: Router,
         private userService: UserService,
         private authService: AuthenticationService) {
@@ -28,19 +31,14 @@ export class AuthenticationComponent implements OnInit {
     public ngOnInit() {
         this.currentUserService.dispatcher.subscribe((user) => {
             this.currentuser = user;
+            this.ref.detectChanges();
+            console.log('App');
+            console.log(this.currentuser);
+            if (this.currentuser !== null) {
+                this.closeLoginClick();
+            }
         });
         this.isLoginVisible = false;
-        this.getCurrentUser();
-    }
-
-    public getCurrentUser() {
-        this.userService.getCurrentUserAsync()
-            .subscribe((user) => {
-                this.currentUserService.setCurrentUser(user);
-            })
-            , ((err) => {
-                this.currentUserService.setCurrentUser(null);
-            });
     }
 
     public logoutClick() {
@@ -53,15 +51,13 @@ export class AuthenticationComponent implements OnInit {
 
     loginClick() {
         this.isLoginVisible = true;
-        this.authService.login("authenticationLogin",true)
-            .subscribe(res => {
-                this.closeLoginClick();
-            });
+        this.ref.detectChanges();
+        this.login.showLogin(true);
     }
 
     closeLoginClick() {
         this.isLoginVisible = false;
-        document.getElementById("authenticationLogin").innerHTML = "";
-        this.getCurrentUser();
+        this.login.hideLogin();
+        this.ref.detectChanges();
     }
 }

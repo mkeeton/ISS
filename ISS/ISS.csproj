@@ -296,6 +296,7 @@
     <Content Include="app\default\Components\authentication.component.html" />
     <Content Include="app\default\Components\default.component.html" />
     <Content Include="app\default\Components\header.component.html" />
+    <Content Include="app\default\Components\menu.component.html" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -344,6 +345,7 @@
     <Content Include="app\default\Styles\default.component.scss" />
     <Content Include="app\default\Styles\authentication.component.scss" />
     <Content Include="app\default\Styles\header.component.scss" />
+    <Content Include="app\default\Styles\menu.component.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -440,6 +442,7 @@
     <TypeScriptCompile Include="app\default\Components\authentication.component.ts" />
     <TypeScriptCompile Include="app\default\Components\default.component.ts" />
     <TypeScriptCompile Include="app\default\Components\header.component.ts" />
+    <TypeScriptCompile Include="app\default\Components\menu.component.ts" />
     <TypeScriptCompile Include="app\default\main.ts" />
     <TypeScriptCompile Include="app\default\Modules\app-routing.module.ts" />
     <TypeScriptCompile Include="app\default\Modules\urlserializer.module.ts" />

@@ -40,6 +40,10 @@ export class AuthenticationService {
         return remoteData;
     }
 
+    public test(): any {
+
+    }
+
     public authenticateAsync(serviceURL: string): Observable<string> {
         let remoteData: Observable<string>;
         remoteData = new Observable((observer) => {
@@ -47,7 +51,8 @@ export class AuthenticationService {
             let counter = 0;
             while (refreshToken === "INUSE") {
                 if (counter <= 20) {
-                    setTimeout(refreshToken = this.settingService.getSetting("authRefresh"), 200);
+                    setTimeout(this.test, 200);
+                    refreshToken = this.settingService.getSetting("authRefresh")
                     counter += 1;
                 } else {
                     refreshToken = "";

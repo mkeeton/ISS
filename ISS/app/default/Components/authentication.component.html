@@ -1,15 +1,18 @@
-﻿<div id="authenticationStatus">
-    <div id="loggedIn" *ngIf="currentuser!=null">
-        <h4>Welcome {{currentuser.FirstName}} {{currentuser.LastName}}</h4><br />Not {{currentuser.FirstName}} {{currentuser.LastName}}? Please <a class="AuthLink" (click)="logoutClick()">Logout</a>.
+﻿<div id="loggedIn" *ngIf="currentuser!=null">
+    <div class="LoggedInMessage">Welcome {{currentuser.FirstName}} {{currentuser.LastName}}</div>
+    <div class="LoggedInMenu">
+        <a class="AuthLink">My Account</a>
+        <a class="AuthLink">Change Password</a>
+        <a class="AuthLink" (click)="logoutClick()">Logout</a>
     </div>
-    <div id="loggedOut" *ngIf="currentuser==null">
-        <a class="AuthLink" (click)="loginClick()">Login/Register</a>
-    </div>
+</div>
+<div id="loggedOut" *ngIf="currentuser==null">
+    <a class="AuthLink" (click)="loginClick()">Login/Register</a>
 </div>
 <div id="openModal" class="modalDialog" [class.modalDialogVisible]="isLoginVisible">
     <div>
         <a title="Close" class="close" (click)="closeLoginClick()">X</a>
-        <div id="authenticationLogin"></div>
+        <iss-authentication-login-page></iss-authentication-login-page>
     </div>
 </div>
-<router-outlet></router-outlet>
+

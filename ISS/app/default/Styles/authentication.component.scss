@@ -1,5 +1,49 @@
-﻿
-#authenticationStatus { width:100%; text-align:right;}
+﻿#loggedIn {
+    padding: 0px 0px;
+    cursor:pointer;
+}
+
+#loggedOut {
+    padding: 14px 16px;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.LoggedInMessage{
+    padding: 14px 16px;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.LoggedInMenu {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.LoggedInMenu a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.LoggedInMenu a:hover {
+    background-color: #ddd;
+}
+
+#loggedIn:hover .LoggedInMenu {
+    display: block;
+}
 
 .modalDialog {
     position: fixed;
